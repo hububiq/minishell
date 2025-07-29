@@ -6,7 +6,7 @@
 #    By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/18 10:20:20 by mdziadko          #+#    #+#              #
-#    Updated: 2025/05/18 10:41:04 by mdziadko         ###   ########.fr        #
+#    Updated: 2025/07/28 23:16:38 by mdziadko         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ CC 			= cc
 CFLAGS		= -Wall -Wextra -Werror -g3 -fsanitize=address
 AR			= ar rcs
 RM			= rm -f
-MINI_FLAGS	= -lreadline
+MINI_FLAGS	= -lreadline #-lhistory UNCOMMENT ON LINUX
 
 # Directories
 LIBFT_DIR		= libft
@@ -34,7 +34,16 @@ LIBS			= $(LIBFT_LIB)
 # 									FILES									   #
 # **************************************************************************** #
 
-SRCS		= main.c 
+SRCS		= main.c \
+			init.c \
+			signals.c \
+			lexer.c \
+			validator.c \
+			expander.c \
+			parser.c \
+			heredoc.c \
+			exec_prep.c \
+			cleanup.c
 OBJS		= $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 HEADERS		= minishell.h
 
