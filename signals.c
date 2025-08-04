@@ -6,11 +6,9 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 14:42:31 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/07/29 18:17:23 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/04 18:06:36 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "minishell.h"
 
 // in main
 // ->setup processing SIGINT and SIGQUIT
@@ -20,6 +18,10 @@
 // fork()
 // -> in child set SIGINT and SIGQUIT to SIG_DFL
 // ->in parent restore old_sa and wait status from child.
+
+#include "minishell.h"
+
+volatile sig_atomic_t	g_sig = 0;
 
 void	setup_signals(void)
 {
@@ -35,11 +37,8 @@ void	setup_signals(void)
 
 void	sigint_handler(int signo)
 {
-	(void)signo;
-	write(STDOUT_FILENO, "\r\n", 2);
-	//rl_replace_line("", 0); // UNCOMMENT IT ON LINUX
-	rl_on_new_line();
-	rl_redisplay();
+	g_sig = signo;
+	reset_readline();
 }
 
 void	ignore_signals(struct sigaction *old_sa)
@@ -53,15 +52,8 @@ void	ignore_signals(struct sigaction *old_sa)
 	sigaction(SIGQUIT, &sa, old_sa);
 }
 
-void	set_default_signals(int signo)
+void	set_default_signals(void)
 {
-	(void)signo;
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-}
-
-void	restore_old_signals(struct sigaction *old_sa)
-{
-	sigaction(SIGINT, old_sa, NULL);
-	sigaction(SIGQUIT, old_sa, NULL);
 }

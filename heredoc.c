@@ -6,25 +6,11 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 21:02:29 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/07/29 22:33:43 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/04 18:04:28 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	wait_child(t_data *mini, int child_pid)
-{
-	int	status;
-
-	waitpid(child_pid, &status, 0);
-	if (WIFEXITED(status))
-		mini->exit_code = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		mini->exit_code = 128 + WTERMSIG(status);
-	else
-		return (1);
-	return (mini->exit_code != 0);
-}
 
 int	write_to_heredoc(t_parser *pars, int fd)
 {
@@ -72,7 +58,6 @@ int	heredoc_child(t_parser *pars, char *tmp_file)
 {
 	int		fd;
 
-	set_default_signals(1);
 	fd = open(tmp_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 		return (free(tmp_file), 1);
@@ -84,28 +69,26 @@ int	heredoc_child(t_parser *pars, char *tmp_file)
 
 int	handle_heredoc(t_parser *pars, int i)
 {
-	int					pid;
-	struct sigaction	old_sa;
+	int	pid;
 
 	pars->cur_redir->file = make_tmp_file(i);
 	if (!pars->cur_redir->file)
 		return (1);
-	ignore_signals(&old_sa);
+	ignore_signals(NULL);
 	pid = fork();
 	if (pid == -1)
 		return (1);
 	if (pid == 0)
 	{
-		if (heredoc_child(pars, pars->cur_redir->file))
-			exit(1);
-		exit(0);
+		set_default_signals();
+		exit(heredoc_child(pars, pars->cur_redir->file));
 	}
-	else if (pid > 0)
+	if (wait_child(pars->mini, pid))
 	{
-		if (wait_child(pars->mini, pid))
-			return (free(pars->cur_redir->file),
-				pars->cur_redir->file = NULL, 1);
-		restore_old_signals(&old_sa);
+		write(1, "\n", 1);
+		free(pars->cur_redir->file);
+		pars->cur_redir->file = NULL;
+		return (1);
 	}
 	return (0);
 }
@@ -130,3 +113,21 @@ int	process_heredoc(t_parser *pars)
 	}
 	return (0);
 }
+
+/*
+static char	*read_line(char *prompt)
+{
+	char	*rl;
+	char	*res;
+
+	if (!prompt)
+		return (NULL);
+	write(STDIN_FILENO, prompt, ft_strlen(prompt));
+	rl = get_next_line(STDIN_FILENO);
+	if (!rl)
+		return (NULL);
+	res = ft_strndup(rl, ft_strlen(rl) - 1);
+	free(rl);
+	return (res);
+}
+*/

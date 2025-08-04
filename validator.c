@@ -6,7 +6,7 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 20:57:43 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/07/20 16:07:00 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/03 23:19:01 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	report_error(char *msg, int code)
 {
 	if (code == 258)
 		syntax_error(msg);
-	else if (code == EFAULT || code == ENOENT)
+	else if (code == EFAULT || code == ENOENT || code == ENOTDIR)
 		code = cmd_error(msg);
 	else if (code == EACCES)
 	{

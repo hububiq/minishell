@@ -1,25 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_prep.c                                        :+:      :+:    :+:   */
+/*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/27 14:47:29 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/07/27 15:21:35 by mdziadko         ###   ########.fr       */
+/*   Created: 2025/08/03 19:17:09 by mdziadko          #+#    #+#             */
+/*   Updated: 2025/08/04 18:07:23 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	process_redirs(t_parser *pars)
+bool	is_builtin(char *str)
 {
-	pars->cur_cmd = pars->mini->cmds;
-	while (pars->cur_cmd)
-	{
-		// if (handle_fd(pars))
-		// 	return (1);
-		pars->cur_cmd = pars->cur_cmd->next;
-	}
-	return (0);
+	return (!ft_strcmp(str, "echo")
+		|| !ft_strcmp(str, "cd")
+		|| !ft_strcmp(str, "pwd")
+		|| !ft_strcmp(str, "export")
+		|| !ft_strcmp(str, "unset")
+		|| !ft_strcmp(str, "env")
+		|| !ft_strcmp(str, "exit"));
 }

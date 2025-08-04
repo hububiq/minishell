@@ -6,7 +6,7 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 17:21:43 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/07/24 22:10:06 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/04 10:04:24 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,23 +71,12 @@ t_env	*find_env(t_data *mini, char *key)
 	return (NULL);
 }
 
-void	print_env(t_data *mini, char *key)
-{
-	t_env	*cur;
-
-	cur = mini->env;
-	while (cur)
-	{
-		if (!key || ft_strcmp(key, cur->key) == 0)
-			printf("%s = %s\n", cur->key, cur->value);
-		cur = cur->next;
-	}
-}
-
 t_data	*init_data(char **envp)
 {
 	t_data	*mini;
 
+	if (!envp || !envp[0])
+		return (NULL);
 	mini = malloc(sizeof(t_data));
 	if (!mini)
 		return (NULL);
@@ -100,8 +89,6 @@ t_data	*init_data(char **envp)
 	mini->tokens = NULL;
 	mini->exit_code = 0;
 	mini->last_exit_code = 0;
-	mini->last_signal = 0;
-	mini->hd_signal = 0;
 	//mini->mini_pid = ft_getpid();
 	return (mini);
 }
