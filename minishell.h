@@ -6,10 +6,9 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 10:32:47 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/05/18 11:05:39 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/04 18:05:53 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -25,9 +24,15 @@
 # include <sys/wait.h>
 # include "libft/libft.h"
 # include <stdbool.h> 
+# include <signal.h>
 
 # define DQUOTE 34
 # define SQUOTE 39
+# define GREEN "\033[1;32m"
+# define CYAN "\033[1;36m"
+# define RESET "\033[0m"
+
+extern volatile sig_atomic_t	g_sig;
 
 typedef enum e_type
 {
@@ -37,7 +42,6 @@ typedef enum e_type
 	T_REDIR_OUT,
 	T_REDIR_APPEND,
 	T_HEREDOC,
-	T_QUOTE
 }	t_type;
 
 typedef struct s_token
@@ -52,12 +56,10 @@ typedef struct s_token
 typedef struct s_redir
 {
 	t_type			type;
-	union
-	{
-		char	*file;
-		char	*delim;
-	};
-	struct s_redir	*next;	
+	bool			expand;
+	char			*file;
+	char			*delim;
+	struct s_redir	*next;
 }					t_redir;
 
 typedef struct s_cmd
@@ -85,13 +87,14 @@ typedef struct s_data
 	t_token	*tokens;
 	t_cmd	*cmds;
 	int		exit_code;
-	int		last_signal;
-	int		hd_signal;
+	int		last_exit_code;
+	int		mini_pid;
 }			t_data;
 
 typedef struct s_lexer
 {
 	t_data	*mini;
+	char	*prompt;
 	int		i;
 	bool	expand;
 	int		space;
@@ -101,7 +104,6 @@ typedef struct s_lexer
 typedef struct s_expander
 {
 	t_data	*mini;
-	t_token	*token;
 	char	*str;
 	int		start;
 	int		var_start;
@@ -122,5 +124,111 @@ typedef struct s_parser
 	int		arg_count;
 	int		arg_i;
 }			t_parser;
+
+// MAIN
+int		run_prompt(t_data *mini);
+void	run_mini(t_data	*mini);
+
+// INIT
+t_env	*add_env(char *str);
+t_env	*init_env(char **envp);
+t_env	*find_env(t_data *mini, char *key);
+t_data	*init_data(char **envp);
+
+// SIGNAL HANDLER
+void	setup_signals(void);
+void	ignore_signals(struct sigaction *old_sa);
+void	sigint_handler(int signo);
+void	set_default_signals(void);
+
+// LEXER
+t_token	*add_token(char *str, t_type type, bool expand);
+int		increment_word_id(t_lexer *lex, t_token *token);
+t_token	*get_next_token(t_lexer *lex);
+int		init_lexer(t_data *mini, t_lexer *lx);
+int		tokenize_input(t_data *mini);
+
+// LEXER_EXTARCT
+char	*extract_word(t_lexer *lex);
+char	*extract_quotes(t_lexer *lex);
+char	*extract_delim(t_lexer *lex);
+
+// LEXER_HELP
+int		ft_isspecial(char c);
+int		isquote(char c);
+int		skip_whitespace(t_lexer *lex);
+
+// VALIDATOR
+int		syntax_error(char *msg);
+int		cmd_error(char *msg);
+int		report_error(char *msg, int code);
+int		validate_syntax(t_data *mini);
+
+// EXPANDER
+int		need_expansion(t_expander	*exp);
+void	free_expander(t_expander *exp);
+char	*expand_str(char *src_str, t_data *mini);
+int		expand_tokens(t_data *mini);
+
+// EXPANDER_EXTRACT
+void	find_var_limits(t_expander	*exp);
+char	*find_var(t_expander *exp);
+int		extract_fragments(t_expander *exp);
+int		join_fragments(t_expander *exp);
+
+// PARSER
+int		init_pars(t_data *mini, t_parser *pars);
+int		parse_cmds(t_data *mini);
+
+// PARSER_HELP
+int		find_executable(t_cmd *cmd, char **dirs);
+char	*find_cmd_path(t_parser *pars);
+int		count_cmd_args(t_token *token);
+char	*join_tokens_by_id(t_token **token);
+
+// PARSER_PROCESS
+int		handle_pipe(t_parser *pars);
+int		handle_cmd(t_parser *pars);
+t_cmd	*add_cmd(t_parser *pars);
+int		add_arg(t_parser *pars);
+int		add_redir(t_parser *pars, t_type type);
+
+// HEREDOC
+int		write_to_heredoc(t_parser *pars, int fd);
+int		heredoc_child(t_parser *pars, char *tmp_file);
+char	*make_tmp_file(int i);
+int		handle_heredoc(t_parser *pars, int i);
+int		process_heredoc(t_parser *pars);
+
+// REDIRECTIONS
+void	safe_close(int *fd);
+int		open_file(t_redir *redir);
+int		handle_cmd_redirs(t_parser *pars);
+int		process_redirs(t_parser *pars);
+
+// EXEC_HELP
+int		wait_child(t_data *mini, int child_pid);
+
+// BUILINS
+bool	is_builtin(char *str);
+
+// CLEANUP_0
+void	free_program(t_data *mini);
+void	free_data(t_data *mini);
+void	free_token_list(t_token	*token);
+void	free_redir_list(t_redir *redir);
+void	free_cmd_list(t_cmd *cmd);
+
+// CLEANUP_1
+void	reset_readline(void);
+int		unlink_tmp(t_data *mini);
+void	free_arr(char **arr);
+void	free_env(t_env *env);
+void	free_env_list(t_env *env);
+
+// PRINT 
+void	print_env(t_data *mini, char *key);	//MUST STAY
+void	print_cmd(t_data *mini);	//REMOVE IT LATER
+void	print_token(t_token *token);	//REMOVE IT LATER
 
 #endif
