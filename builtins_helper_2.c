@@ -6,7 +6,7 @@
 /*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 16:18:58 by hgatarek          #+#    #+#             */
-/*   Updated: 2025/08/06 15:45:50 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/06 18:27:53 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ bool is_parent_mod_builtins(char *cmd_name)
 {
     if (!cmd_name)
         return (false);
-    if (ft_strcmp(cmd_name, "cd" == 0)
+    if (ft_strcmp(cmd_name, "cd") == 0
         || ft_strcmp(cmd_name, "export") == 0
         || ft_strcmp(cmd_name, "unset") == 0
         || ft_strcmp(cmd_name, "exit") == 0)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
+/*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 10:32:47 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/04 18:05:53 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/06 18:32:48 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ typedef struct s_cmd
 	bool			builtin;
 	int				fd_in;
 	int				fd_out;
+	int				pid;
 	t_redir			*redirs;
 	struct s_cmd	*next;
 }					t_cmd;
@@ -206,11 +207,39 @@ int		open_file(t_redir *redir);
 int		handle_cmd_redirs(t_parser *pars);
 int		process_redirs(t_parser *pars);
 
+// EXEC
+bool 	is_parent_mod_builtins(char *cmd_name);
+int 	execute(t_data *mini);
+void	execute_child_process(t_cmd *cmd, t_data *mini);
+void 	apply_redirections(t_cmd *cmd);
+int		launch_command(t_cmd *cmd, t_data *mini, int prev_pipe_read_end,
+                        int pipe_fds[2]);
+int		execute_pipeline(t_data *mini);
+
 // EXEC_HELP
 int		wait_child(t_data *mini, int child_pid);
+int		wait_for_children(t_data *mini);
+char 	*get_cd_path(t_cmd *cmd, t_data *mini);
+int 	update_pwd_vars(t_data *mini, char *old_pwd_path);
+void	manage_parent_pipes(int *prev_pip_rend, int pipe_fds[2],
+								bool has_next_cmd);
+char 	**convert_env_list_to_array(t_env *env_list);
 
-// BUILINS
+// BUILTINS
 bool	is_builtin(char *str);
+void 	restore_fds(int original_stdin, int original_stdout);
+void	report_cd_error(char *path);
+int		builtin_env(t_cmd *cmd, t_data *mini);
+int		builtin_cd(t_cmd *cmd, t_data *mini);
+int		builtin_pwd(t_cmd *cmd);
+int 	builtin_echo(t_cmd *cmd);
+int 	execute_builtin(t_cmd *cmd, t_data *mini);
+int		count_env_nodes(t_env *env_list);
+int		set_env_var(t_env **env_list_head, char *key, char *value);
+int		update_existing_env(t_env *env_list, char *key, char *value);
+int		set_env_var(t_env **env_list_head, char *key, char *value);
+int		add_new_env_var(t_env **env_list_head, char *key, char *value);
+char	*find_env_value(t_env *env_list, char *key);
 
 // CLEANUP_0
 void	free_program(t_data *mini);

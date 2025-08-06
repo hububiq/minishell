@@ -6,12 +6,11 @@
 /*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 14:50:50 by hgatarek          #+#    #+#             */
-/*   Updated: 2025/08/06 13:27:23 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/06 18:38:49 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
+#include "minishell.h"
 
 /*I only free whats been malloced before execve and after the fork. No freeing of data using by parent*/
 void execute_child_process(t_cmd *cmd, t_data *mini)
@@ -20,7 +19,7 @@ void execute_child_process(t_cmd *cmd, t_data *mini)
 
     if (!cmd->path)
     {
-        write(STDERR_FILENO, SHELL_NAME, ft_strlen(SHELL_NAME));
+        write(STDERR_FILENO, "mini: ", 6);
         write(STDERR_FILENO, ": ", 2);
         write(STDERR_FILENO, cmd->args[0], ft_strlen(cmd->args[0]));
         write(STDERR_FILENO, ": command not found\n", 20);
@@ -84,27 +83,25 @@ int execute_pipeline(t_data *mini)
     t_cmd   *curr_cmd;
     int     prev_pip_rend;
     int     pipe_fds[2];
-    int     last_pid;
 
     curr_cmd = mini->cmds;
     prev_pip_rend = STDIN_FILENO;
-    last_pid = -1;
     while (curr_cmd)
     {
         if (curr_cmd->next)
             if (pipe(pipe_fds) == -1)
                 return (report_error("pipe failed", 1));
-        last_pid = launch_command(curr_cmd, mini, prev_pip_rend, pipe_fds);
-        if (last_pid == -1)
+        curr_cmd->pid = launch_command(curr_cmd, mini, prev_pip_rend, pipe_fds);
+        if (curr_cmd->pid == -1)
         {
             if (prev_pip_rend != STDIN_FILENO)
                 close(prev_pip_rend);
             return (1);
         }
-        manage_parent_pipes(&prev_pip_rend, pipe_fds, current_cmd->next);
+        manage_parent_pipes(&prev_pip_rend, pipe_fds, curr_cmd->next);
         curr_cmd = curr_cmd->next;
     }
-    wait_for_pipeline(mini, last_pid);
+    //wait_for_pipeline(mini, last_pid);
     return (0);
 }
 
@@ -128,6 +125,7 @@ int execute(t_data *mini)
         restore_fds(original_stdin, original_stdout);
         return (0);
     }
-    return (execute_pipeline(mini));
+    execute_pipeline(mini);
+    return (wait_for_children(mini));
 }
 

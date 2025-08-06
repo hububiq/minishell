@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_process.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
+/*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:50:53 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/04 17:55:38 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/06 17:43:45 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ t_cmd	*add_cmd(t_parser *pars)
 	new_cmd->fd_in = STDIN_FILENO;
 	new_cmd->fd_out = STDOUT_FILENO;
 	new_cmd->next = NULL;
+	new_cmd->pid = -1;
 	pars->arg_count = count_cmd_args(pars->cur_token);
 	if (pars->arg_count < 0)
 		return (NULL);

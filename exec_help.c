@@ -6,13 +6,43 @@
 /*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 21:58:18 by hgatarek          #+#    #+#             */
-/*   Updated: 2025/08/06 16:30:04 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/06 18:05:40 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
- void manage_parent_pipes(int *prev_pip_rend, int pipe_fds[2], bool has_next_cmd)
+int wait_for_children(t_data *mini)
+{
+    t_cmd   *cmd;
+    int     exit_code;
+
+    exit_code = 0;
+    cmd = mini->cmds;
+    while (cmd)
+    {
+        exit_code = wait_child(mini, cmd->pid);
+        cmd = cmd->next;
+    }
+    return (exit_code);
+}
+
+int	wait_child(t_data *mini, int child_pid)
+{
+	int	status;
+
+	waitpid(child_pid, &status, 0);
+	if (WIFEXITED(status))
+		mini->exit_code = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		mini->exit_code = 128 + WTERMSIG(status);
+	else
+		return (1);
+	return (mini->exit_code != 0);
+}
+
+ void manage_parent_pipes(int *prev_pip_rend, int pipe_fds[2],
+                                bool has_next_cmd)
  {
     if (*prev_pip_rend != STDIN_FILENO)
         close(*prev_pip_rend);
@@ -64,18 +94,22 @@ int count_env_nodes(t_env *env_list)
     return (count);
 }
 
+
+
+
 /*last line - Reap any other zombie processes from the pipeline*/
 /*first line - no external command or forked built-in was run*/
-void	wait_for_pipeline(t_data *mini, int last_pid)
-{
-    int status;
+// void	wait_for_pipeline(t_data *mini)
+// {
+//     int status;
 
-    if (last_pid <= 0)
-        return;
-    waitpid(last_pid, &status, 0);
-    if (WIFEXITED(status))
-        mini->exit_code = WEXITSTATUS(status);
-    else if (WIFSIGNALED(status))
-        mini->exit_code = 128 + WTERMSIG(status);
-    while (wait(NULL) > 0);
-}
+//     if (last_pid <= 0)
+//         return;
+//     while (mini->next)
+//     waitpid(last_pid, &status, 0);
+//     if (WIFEXITED(status))
+//         mini->exit_code = WEXITSTATUS(status);
+//     else if (WIFSIGNALED(status))
+//         mini->exit_code = 128 + WTERMSIG(status);
+//     while (wait(NULL) > 0);
+// }

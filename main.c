@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
+/*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:14:39 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/03 18:47:43 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/06 18:11:03 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ int	run_prompt(t_data *mini)
 	if (parse_cmds(mini))
 		return (free_data(mini), mini->exit_code);
 	print_cmd(mini);
+	if (execute(mini))
+		return (free_data(mini), mini->exit_code);
 	return (free_data(mini), 0);
 }
 

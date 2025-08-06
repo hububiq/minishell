@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins.c                                         :+:      :+:    :+:   */
+/*   builtinsH.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 11:35:31 by hgatarek          #+#    #+#             */
-/*   Updated: 2025/08/06 15:53:36 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/06 18:36:55 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int builtin_env(t_cmd *cmd, t_data *mini)
     return (0);
 }
 
-int builtin_cd(t_cmd *cmd)
+int builtin_cd(t_cmd *cmd, t_data *mini)
 {
     char    *path;
     char    old_pwd[4096];
@@ -41,7 +41,7 @@ int builtin_cd(t_cmd *cmd)
     if (cmd->args[1] && cmd->args[2])
         return (report_error("cd: too many arguments", 1), 1);
     if (getcwd(old_pwd, sizeof(old_pwd)) == NULL)
-        ft_strlcpy(old_pwd, "", sizeof(old_pw));
+        ft_strlcpy(old_pwd, "", sizeof(old_pwd));
     path = get_cd_path(cmd, mini);
     if (!path)
         return (1);
@@ -57,18 +57,18 @@ int builtin_pwd(t_cmd *cmd)
 {
     char cwd[4096];
 
-    void(cmd);
-    cwd = getcwd(cwd, sizeof(cwd));
-    if (cwd != NULL)
-    {
+    (void)cmd;
+    getcwd(cwd, sizeof(cwd));
+    // if (cwd)
+    // {
         printf("%s\n", cwd);
         return (0);
-    }
-    else
-    {
-        perror("minishell: pwd");
-        return (1);
-    }
+    //}
+    // else
+    // {
+    //     perror("minishell: pwd");
+    //     return (1);
+    // }
 }
 
 int builtin_echo(t_cmd *cmd)
@@ -105,14 +105,14 @@ int execute_builtin(t_cmd *cmd, t_data *mini)
         exit_status = builtin_pwd(cmd);
     else if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
         exit_status = builtin_cd(cmd, mini);
-    else if (ft_strncmp(cmd->args[0], "export", 7) == 0)
-        exit_status = builtin_export(cmd, mini);
-    else if (ft_strncmp(cmd->args[0], "unset", 6) == 0)
-        exit_status = builtin_unset(cmd, mini);
+    // else if (ft_strncmp(cmd->args[0], "export", 7) == 0)
+    //     exit_status = builtin_export(cmd, mini);
+    // else if (ft_strncmp(cmd->args[0], "unset", 6) == 0)
+    //     exit_status = builtin_unset(cmd, mini);
     else if (ft_strcmp(cmd->args[0], "env") == 0)
         exit_status = builtin_env(cmd, mini);
-    else if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
-        exit_status = builtin_exit(cmd, mini);
+    // else if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
+    //     exit_status = builtin_exit(cmd, mini);
     mini->last_exit_code = exit_status;
     return (exit_status);
 }
