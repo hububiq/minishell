@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+         #
+#    By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/18 10:20:20 by mdziadko          #+#    #+#              #
-#    Updated: 2025/08/04 18:10:46 by mdziadko         ###   ########.fr        #
+#    Updated: 2025/08/06 18:26:18 by hgatarek         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,9 +56,14 @@ SRCS		= main.c \
 			heredoc.c \
 			redirections.c \
 			builtins.c \
+			builtin_cd_helper.c \
+			builtins_helper.c \
+			builtins_helper_2.c \
+			builtinsH.c \
 			cleanup_0.c cleanup_1.c \
 			exec_help.c \
-			print.c
+			print.c	\
+			exec.c 
 OBJS		= $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 HEADERS		= minishell.h
 
