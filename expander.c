@@ -6,7 +6,7 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:27:08 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/04 17:43:45 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/10 23:10:42 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ void	free_expander(t_expander *exp)
 	free(exp->joint_str);
 }
 
-int	need_expansion(t_expander	*exp)
+bool	need_expansion(t_expander	*exp)
 {
 	if (exp->var_end == exp->var_start + 1)
-		return (0);
-	return (1);
+		return (false);
+	return (true);
 }
 
 char	*expand_str(char *src_str, t_data *mini)

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+         #
+#    By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/18 10:20:20 by mdziadko          #+#    #+#              #
-#    Updated: 2025/08/06 18:26:18 by hgatarek         ###   ########.fr        #
+#    Updated: 2025/08/11 13:35:10 by mdziadko         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,6 +48,7 @@ LIBS			= $(LIBFT_LIB)
 
 SRCS		= main.c \
 			init.c \
+			env.c env_help.c \
 			signals.c \
 			lexer.c lexer_extract.c lexer_help.c\
 			validator.c \
@@ -56,14 +57,11 @@ SRCS		= main.c \
 			heredoc.c \
 			redirections.c \
 			builtins.c \
-			builtin_cd_helper.c \
-			builtins_helper.c \
-			builtins_helper_2.c \
-			builtinsH.c \
+			builtin_env.c builtin_export.c builtin_unset.c builtin_exit.c \
+			builtin_cd.c builtin_echo.c builtin_pwd.c \
 			cleanup_0.c cleanup_1.c \
-			exec_help.c \
-			print.c	\
-			exec.c 
+			exec.c exec_help.c \
+			print.c
 OBJS		= $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 HEADERS		= minishell.h
 

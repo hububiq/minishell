@@ -1,43 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_help.c                                       :+:      :+:    :+:   */
+/*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/04 17:27:14 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/10 23:09:53 by mdziadko         ###   ########.fr       */
+/*   Created: 2025/08/10 10:58:04 by mdziadko          #+#    #+#             */
+/*   Updated: 2025/08/11 13:25:59 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	is_special(char c)
-{
-	if (c == '|' || c == '<' || c == '>')
-		return (true);
-	return (false);
-}
+/*	UNSET KEY
+	Remove environment variable.
+*/
 
-bool	is_quote(char c)
+int	builtin_unset(t_cmd *cmd, t_data *mini)
 {
-	if (c == DQUOTE || c == SQUOTE)
-		return (true);
-	return (false);
-}
+	int	i;
 
-int	skip_whitespace(t_lexer *lx)
-{
-	int	saw_space;
-
-	if (!lx || !lx->prompt)
+	if (!mini || !cmd || !cmd->args || !cmd->args[0])
 		return (1);
-	saw_space = 0;
-	while (ft_isspace(lx->prompt[lx->i]))
+	i = 1;
+	while (cmd->args[i])
 	{
-		saw_space = 1;
-		lx->i++;
+		if (ft_strchr(cmd->args[i], '=') || ft_isdigit(cmd->args[i][0]))
+		{
+			report_error("unset: not a valid identifier", 1);
+			i++;
+			continue ;
+		}
+		delete_env(&mini->env, cmd->args[i]);
+		i++;
 	}
-	lx->space = saw_space;
 	return (0);
 }

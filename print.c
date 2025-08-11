@@ -6,24 +6,11 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 10:17:12 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/07/31 10:23:58 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/10 11:10:08 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	print_env(t_data *mini, char *key)
-{
-	t_env	*cur;
-
-	cur = mini->env;
-	while (cur)
-	{
-		if (!key || ft_strcmp(key, cur->key) == 0)
-			printf("%s = %s\n", cur->key, cur->value);
-		cur = cur->next;
-	}
-}
 
 void	print_token(t_token *token)
 {

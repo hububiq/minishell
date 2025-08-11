@@ -6,7 +6,7 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:49:33 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/04 17:56:25 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/10 14:23:03 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ char	*find_cmd_path(t_parser *pars)
 			return (ft_strdup(pars->cur_cmd->args[0]));
 		return (NULL);
 	}
-	path = find_env(pars->mini, "PATH");
+	path = find_env(pars->mini->env, "PATH");
 	if (!path || !path->value)
 		return (NULL);
 	dirs = ft_split(path->value, ':');

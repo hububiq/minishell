@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_help.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 21:58:18 by hgatarek          #+#    #+#             */
-/*   Updated: 2025/08/06 18:05:40 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/09 15:53:04 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int wait_for_children(t_data *mini)
 {
-    t_cmd   *cmd;
+    t_cmd*cmd;
     int     exit_code;
 
     exit_code = 0;

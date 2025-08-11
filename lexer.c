@@ -6,7 +6,7 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 21:11:25 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/04 17:37:09 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/10 23:07:09 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ t_token	*get_next_token(t_lexer *lx)
 		return (lx->i++, add_token(ft_strdup("<"), T_REDIR_IN, false));
 	if (lx->tail && lx->tail->type == T_HEREDOC)
 		return (add_token(extract_delim(lx), T_WORD, lx->expand));
-	if (isquote(lx->prompt[lx->i]))
+	if (is_quote(lx->prompt[lx->i]))
 		return (add_token(extract_quotes(lx), T_WORD, lx->expand));
 	return (add_token(extract_word(lx), T_WORD, lx->expand));
 }
