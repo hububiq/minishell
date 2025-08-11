@@ -16,8 +16,9 @@ void	free_program(t_data *mini)
 {
 	if (!mini)
 		return ;
-	free_data(mini);
 	free_env_list(mini->env);
+	mini->env = NULL;
+	free_data(mini);
 	free(mini);
 	rl_clear_history();
 }
