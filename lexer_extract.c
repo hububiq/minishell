@@ -6,7 +6,7 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:35:14 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/04 17:35:35 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/10 23:07:09 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ char	*extract_word(t_lexer *lx)
 	start = lx->i;
 	while (lx->prompt[lx->i]
 		&& !ft_isspace(lx->prompt[lx->i])
-		&& !ft_isspecial(lx->prompt[lx->i])
-		&& !isquote(lx->prompt[lx->i]))
+		&& !is_special(lx->prompt[lx->i])
+		&& !is_quote(lx->prompt[lx->i]))
 		lx->i++;
 	str = ft_strndup(&lx->prompt[start], lx->i - start);
 	if (!str)
@@ -35,7 +35,7 @@ char	*extract_quotes(t_lexer *lx)
 	char	quote;
 	char	*str;
 
-	if (!isquote(lx->prompt[lx->i]))
+	if (!is_quote(lx->prompt[lx->i]))
 		return (NULL);
 	start = lx->i + 1;
 	quote = lx->prompt[lx->i];
@@ -63,9 +63,9 @@ char	*extract_delim(t_lexer *lx)
 
 	result = ft_strdup("");
 	while (lx->prompt[lx->i] && !ft_isspace(lx->prompt[lx->i])
-		&& !ft_isspecial(lx->prompt[lx->i]))
+		&& !is_special(lx->prompt[lx->i]))
 	{
-		if (isquote(lx->prompt[lx->i]))
+		if (is_quote(lx->prompt[lx->i]))
 		{
 			fragment = extract_quotes(lx);
 			lx->expand = false;

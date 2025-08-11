@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 10:32:47 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/06 18:32:48 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/11 13:56:41 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ typedef struct s_env
 {
 	char			*key;
 	char			*value;
+	bool			exported;
 	struct s_env	*next;
 }					t_env;
 
@@ -131,10 +132,20 @@ int		run_prompt(t_data *mini);
 void	run_mini(t_data	*mini);
 
 // INIT
-t_env	*add_env(char *str);
-t_env	*init_env(char **envp);
-t_env	*find_env(t_data *mini, char *key);
 t_data	*init_data(char **envp);
+
+// ENV
+char	*extract_env_key(char *str);
+char	*extract_env_val(char *str);
+t_env	*init_env(char **envp);
+t_env	*find_env(t_env *head, char *key);
+t_env	*new_env(char *str, bool exported);
+
+// ENV_HELP
+int		delete_env(t_env **head, char *key);
+bool	is_valid_env_key(char *arg);
+void	print_env(t_env *head, char *key);
+void	print_exported_env(t_env *head, char *key);
 
 // SIGNAL HANDLER
 void	setup_signals(void);
@@ -155,8 +166,8 @@ char	*extract_quotes(t_lexer *lex);
 char	*extract_delim(t_lexer *lex);
 
 // LEXER_HELP
-int		ft_isspecial(char c);
-int		isquote(char c);
+bool	is_special(char c);
+bool	is_quote(char c);
 int		skip_whitespace(t_lexer *lex);
 
 // VALIDATOR
@@ -166,7 +177,7 @@ int		report_error(char *msg, int code);
 int		validate_syntax(t_data *mini);
 
 // EXPANDER
-int		need_expansion(t_expander	*exp);
+bool	need_expansion(t_expander	*exp);
 void	free_expander(t_expander *exp);
 char	*expand_str(char *src_str, t_data *mini);
 int		expand_tokens(t_data *mini);
@@ -208,38 +219,63 @@ int		handle_cmd_redirs(t_parser *pars);
 int		process_redirs(t_parser *pars);
 
 // EXEC
-bool 	is_parent_mod_builtins(char *cmd_name);
-int 	execute(t_data *mini);
+bool	is_parent_mod_builtins(char *cmd_name);
+int		execute(t_data *mini);
 void	execute_child_process(t_cmd *cmd, t_data *mini);
-void 	apply_redirections(t_cmd *cmd);
+void	apply_redirections(t_cmd *cmd);
 int		launch_command(t_cmd *cmd, t_data *mini, int prev_pipe_read_end,
-                        int pipe_fds[2]);
+			int pipe_fds[2]);
 int		execute_pipeline(t_data *mini);
 
 // EXEC_HELP
 int		wait_child(t_data *mini, int child_pid);
 int		wait_for_children(t_data *mini);
-char 	*get_cd_path(t_cmd *cmd, t_data *mini);
-int 	update_pwd_vars(t_data *mini, char *old_pwd_path);
+char	*get_cd_path(t_cmd *cmd, t_data *mini);
+int		update_pwd_vars(t_data *mini, char *old_pwd_path);
 void	manage_parent_pipes(int *prev_pip_rend, int pipe_fds[2],
-								bool has_next_cmd);
-char 	**convert_env_list_to_array(t_env *env_list);
+			bool has_next_cmd);
+char	**convert_env_list_to_array(t_env *env_list);
 
 // BUILTINS
 bool	is_builtin(char *str);
-void 	restore_fds(int original_stdin, int original_stdout);
-void	report_cd_error(char *path);
-int		builtin_env(t_cmd *cmd, t_data *mini);
-int		builtin_cd(t_cmd *cmd, t_data *mini);
-int		builtin_pwd(t_cmd *cmd);
-int 	builtin_echo(t_cmd *cmd);
-int 	execute_builtin(t_cmd *cmd, t_data *mini);
+void	restore_fds(int original_stdin, int original_stdout);
+
+int		execute_builtin(t_cmd *cmd, t_data *mini);
 int		count_env_nodes(t_env *env_list);
 int		set_env_var(t_env **env_list_head, char *key, char *value);
 int		update_existing_env(t_env *env_list, char *key, char *value);
 int		set_env_var(t_env **env_list_head, char *key, char *value);
 int		add_new_env_var(t_env **env_list_head, char *key, char *value);
 char	*find_env_value(t_env *env_list, char *key);
+
+// BUILTIN_ENV_HELP
+
+// BUILTIN_ECHO	
+int		builtin_echo(t_cmd *cmd);
+
+// BUILTIN_CD
+int		builtin_cd(t_cmd *cmd, t_data *mini);
+void	report_cd_error(char *path);
+
+// BUILTIN_PWD
+int		builtin_pwd(t_cmd *cmd);
+
+// BUILTIN_ENV
+int		builtin_env(t_cmd *cmd, t_data *mini);
+
+// BUILTIN_UNSET
+int		builtin_unset(t_cmd *cmd, t_data *mini);
+
+// BUILTIN_EXPORT
+bool	arg_is_env(char *str); // USE THIS TO SET VAR FROM THE PROMPT
+void	append_env(t_env **head, t_env *new);
+int		export_env(t_env *head, char *str);
+int		builtin_export(t_cmd *cmd, t_data *mini);
+
+// BUILTIN_EXIT
+bool	is_number(char	*str);
+int		count_args(t_cmd *cmd);
+int		builtin_exit(t_cmd *cmd, t_data *mini);
 
 // CLEANUP_0
 void	free_program(t_data *mini);
@@ -255,8 +291,7 @@ void	free_arr(char **arr);
 void	free_env(t_env *env);
 void	free_env_list(t_env *env);
 
-// PRINT 
-void	print_env(t_data *mini, char *key);	//MUST STAY
+// PRINT
 void	print_cmd(t_data *mini);	//REMOVE IT LATER
 void	print_token(t_token *token);	//REMOVE IT LATER
 
