@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validator.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
+/*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 20:57:43 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/03 23:19:01 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/12 14:53:53 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,19 @@ int	syntax_error(char *msg)
 	return (258);
 }
 
-int	cmd_error(char *msg)
+int	cmd_error(char *msg, int code)
 {
-	write(2, "mini: command not found: ", 26);
-	write(2, msg, ft_strlen(msg));
-	write(2, "\n", 1);
+	if (code == 2)
+	{
+		write(2, "mini: ", 7);
+		write(2, msg, ft_strlen(msg));
+		write(2, ": No such file or directory\n", 28);
+	}
+	else
+	{
+		write(2, "mini: command not found: ", 26);
+		write(2, "\n", 1);
+	}
 	return (127);
 }
 
@@ -33,7 +41,7 @@ int	report_error(char *msg, int code)
 	if (code == 258)
 		syntax_error(msg);
 	else if (code == EFAULT || code == ENOENT || code == ENOTDIR)
-		code = cmd_error(msg);
+		code = cmd_error(msg, code);
 	else if (code == EACCES)
 	{
 		perror(msg);

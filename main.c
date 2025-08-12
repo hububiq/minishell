@@ -6,7 +6,7 @@
 /*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:14:39 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/06 18:11:03 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/12 14:58:13 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,14 @@
 
 int	run_prompt(t_data *mini)
 {
-	printf("------TOKENIZATION------\n");
 	if (tokenize_input(mini))
 		return (free_data(mini), mini->exit_code);
-	print_token(mini->tokens);
 	if (validate_syntax(mini))
 		return (free_data(mini), mini->exit_code);
-	printf("------EXPANSION------\n");
 	if (expand_tokens(mini))
 		return (free_data(mini), mini->exit_code);
-	print_token(mini->tokens);
-	printf("------PARSING------\n");
 	if (parse_cmds(mini))
 		return (free_data(mini), mini->exit_code);
-	print_cmd(mini);
 	if (execute(mini))
 		return (free_data(mini), mini->exit_code);
 	return (free_data(mini), 0);

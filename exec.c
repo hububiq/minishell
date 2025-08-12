@@ -6,7 +6,7 @@
 /*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 14:50:50 by hgatarek          #+#    #+#             */
-/*   Updated: 2025/08/08 15:37:53 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/12 12:09:54 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	execute_child_process(t_cmd *cmd, t_data *mini)
 	if (!cmd->path)
 	{
 		write(STDERR_FILENO, "mini: ", 6);
-		write(STDERR_FILENO, ": ", 2);
 		write(STDERR_FILENO, cmd->args[0], ft_strlen(cmd->args[0]));
 		write(STDERR_FILENO, ": command not found\n", 20);
 		exit(127);

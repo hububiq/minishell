@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
+/*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 10:32:47 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/11 13:56:41 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/12 14:56:54 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ int		skip_whitespace(t_lexer *lex);
 
 // VALIDATOR
 int		syntax_error(char *msg);
-int		cmd_error(char *msg);
+int		cmd_error(char *msg, int code);
 int		report_error(char *msg, int code);
 int		validate_syntax(t_data *mini);
 
@@ -290,9 +290,5 @@ int		unlink_tmp(t_data *mini);
 void	free_arr(char **arr);
 void	free_env(t_env *env);
 void	free_env_list(t_env *env);
-
-// PRINT
-void	print_cmd(t_data *mini);	//REMOVE IT LATER
-void	print_token(t_token *token);	//REMOVE IT LATER
 
 #endif
