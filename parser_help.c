@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_help.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
+/*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:49:33 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/10 14:23:03 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/12 15:03:49 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int	count_cmd_args(t_token *token)
 		}
 		token = token->next;
 	}
-	printf ("COUNT ARGS: %i\n", count);
 	return (count);
 }
 

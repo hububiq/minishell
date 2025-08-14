@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+         #
+#    By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/18 10:20:20 by mdziadko          #+#    #+#              #
-#    Updated: 2025/08/11 13:35:10 by mdziadko         ###   ########.fr        #
+#    Updated: 2025/08/12 15:07:23 by hgatarek         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@
 
 NAME		= minishell
 CC 			= cc
-CFLAGS		= -Wall -Wextra -Werror -g3 -fsanitize=address
+CFLAGS		= -Wall -Wextra -Werror -g3
 AR			= ar rcs
 RM			= rm -f
 # MINI_FLAGS	= -lreadline #-lhistory UNCOMMENT ON LINUX
@@ -60,8 +60,7 @@ SRCS		= main.c \
 			builtin_env.c builtin_export.c builtin_unset.c builtin_exit.c \
 			builtin_cd.c builtin_echo.c builtin_pwd.c \
 			cleanup_0.c cleanup_1.c \
-			exec.c exec_help.c \
-			print.c
+			exec.c exec_help.c 
 OBJS		= $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 HEADERS		= minishell.h
 
