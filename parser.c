@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
+/*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 14:09:12 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/04 17:54:25 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/15 17:23:27 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ int	parse_cmds(t_data *mini)
 	if (process_heredoc(&pars))
 		return (1);
 	if (process_redirs(&pars))
-		return (1);
+	{
+		mini->last_exit_code = 1;
+		return (0);
+	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:14:39 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/12 14:58:13 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/15 17:22:58 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	run_prompt(t_data *mini)
 		return (free_data(mini), mini->exit_code);
 	if (expand_tokens(mini))
 		return (free_data(mini), mini->exit_code);
-	if (parse_cmds(mini))
+	if (parse_cmds(mini)) //mini is not updated somehow with last_exit_code and echo $? is wrong with just one command <infile
 		return (free_data(mini), mini->exit_code);
 	if (execute(mini))
 		return (free_data(mini), mini->exit_code);
