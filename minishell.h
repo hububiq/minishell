@@ -6,7 +6,7 @@
 /*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 10:32:47 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/12 14:56:54 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/15 21:31:12 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,7 @@ int		init_pars(t_data *mini, t_parser *pars);
 int		parse_cmds(t_data *mini);
 
 // PARSER_HELP
+t_cmd	*alloc_cmd(void);
 int		find_executable(t_cmd *cmd, char **dirs);
 char	*find_cmd_path(t_parser *pars);
 int		count_cmd_args(t_token *token);
@@ -222,7 +223,7 @@ int		process_redirs(t_parser *pars);
 bool	is_parent_mod_builtins(char *cmd_name);
 int		execute(t_data *mini);
 void	execute_child_process(t_cmd *cmd, t_data *mini);
-void	apply_redirections(t_cmd *cmd);
+int		apply_redirections(t_cmd *cmd);
 int		launch_command(t_cmd *cmd, t_data *mini, int prev_pipe_read_end,
 			int pipe_fds[2]);
 int		execute_pipeline(t_data *mini);

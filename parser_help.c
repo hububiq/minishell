@@ -6,11 +6,27 @@
 /*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:49:33 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/12 15:03:49 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/16 01:46:43 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_cmd *alloc_cmd(void)
+{
+	t_cmd	*cmd;
+
+	cmd = malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	ft_bzero(cmd, sizeof(t_cmd));
+	cmd->fd_in = STDIN_FILENO;
+	cmd->fd_out = STDOUT_FILENO;
+	cmd->next = NULL;
+	cmd->pid = -1;
+	cmd->args = NULL;
+	return (cmd);
+}
 
 int	count_cmd_args(t_token *token)
 {

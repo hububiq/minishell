@@ -6,7 +6,7 @@
 /*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 14:50:50 by hgatarek          #+#    #+#             */
-/*   Updated: 2025/08/15 13:01:43 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/16 01:45:13 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,23 @@ void	execute_child_process(t_cmd *cmd, t_data *mini)
 	exit(126);
 }
 
-void	apply_redirections(t_cmd *cmd)
+int	apply_redirections(t_cmd *cmd)
 {
+	if (cmd->fd_in == -1 || cmd->fd_out == -1)
+        return (1);
 	if (cmd->fd_in != STDIN_FILENO)
-	{
-		dup2(cmd->fd_in, STDIN_FILENO);
-		close(cmd->fd_in);
-	}
-	if (cmd->fd_out != STDOUT_FILENO)
-	{
-		dup2(cmd->fd_out, STDOUT_FILENO);
-		close(cmd->fd_out);
-	}
+    {
+        if (dup2(cmd->fd_in, STDIN_FILENO) == -1)
+            return (perror("dup2"), 1);
+        close(cmd->fd_in);
+    }
+    if (cmd->fd_out != STDOUT_FILENO)
+    {
+        if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
+            return (perror("dup2"), 1);
+        close(cmd->fd_out);
+    }
+return (0);
 }
 
 int	launch_command(t_cmd *cmd, t_data *mini, int prev_pipe_read_end,
@@ -71,11 +76,11 @@ int	launch_command(t_cmd *cmd, t_data *mini, int prev_pipe_read_end,
 			dup2(pipe_fds[1], STDOUT_FILENO);
 			close(pipe_fds[1]);
 		}
-		apply_redirections(cmd);
+		if (apply_redirections(cmd) != 0)
+			exit (1);
 		if (cmd->builtin)
 			exit(execute_builtin(cmd, mini));
-		else
-			execute_child_process(cmd, mini);
+		execute_child_process(cmd, mini);
 	}
 	return (pid);
 }
@@ -88,8 +93,11 @@ int	execute_pipeline(t_data *mini)
 
 	curr_cmd = mini->cmds;
 	prev_pip_rend = STDIN_FILENO;
+	pipe_fds[0] = -1;
+	pipe_fds[1] = -1;
 	while (curr_cmd)
 	{
+		mini->last_exit_code = 0;
 		if (curr_cmd->next)
 			if (pipe(pipe_fds) == -1)
 				return (report_error("pipe failed", 1));
@@ -100,10 +108,10 @@ int	execute_pipeline(t_data *mini)
 				close(prev_pip_rend);
 			return (1);
 		}
-		manage_parent_pipes(&prev_pip_rend, pipe_fds, curr_cmd->next);
+		manage_parent_pipes(&prev_pip_rend, pipe_fds, (curr_cmd->next != NULL));
 		curr_cmd = curr_cmd->next;
 	}
-	return (0);
+	return (wait_for_children(mini));
 }
 
 int	execute(t_data *mini)
@@ -115,16 +123,21 @@ int	execute(t_data *mini)
 	current_cmd = mini->cmds;
 	if (!current_cmd)
 		return (0);
+	mini->last_exit_code = 0;
 	if (current_cmd && !current_cmd->next && current_cmd->builtin
 		&& is_parent_mod_builtins(current_cmd->args[0]))
 	{
 		original_stdin = dup(STDIN_FILENO);
 		original_stdout = dup(STDOUT_FILENO);
-		apply_redirections(current_cmd);
-		mini->last_exit_code = execute_builtin(current_cmd, mini);
+		if (apply_redirections(current_cmd) != 0)
+		{
+			restore_fds(original_stdin, original_stdout);
+			return (mini->last_exit_code = 1);
+		}
+		else
+			mini->last_exit_code = execute_builtin(current_cmd, mini);
 		restore_fds(original_stdin, original_stdout);
-		return (0);
+		return (mini->last_exit_code);
 	}
-	execute_pipeline(mini);
-	return (wait_for_children(mini));
+	return (execute_pipeline(mini));
 }

@@ -6,7 +6,7 @@
 /*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 21:58:18 by hgatarek          #+#    #+#             */
-/*   Updated: 2025/08/08 16:00:39 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/16 01:41:46 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,30 @@
 
 int	wait_for_children(t_data *mini)
 {
+	int		status;
 	t_cmd	*cmd;
-	int		exit_code;
 
-	exit_code = 0;
 	cmd = mini->cmds;
+	mini->last_exit_code = 0;
+	if (!cmd) 
+		return (mini->last_exit_code);
 	while (cmd)
 	{
-		exit_code = wait_child(mini, cmd->pid);
+		if (cmd->pid > 0)
+		{
+			waitpid(cmd->pid, &status, 0);
+			if (WIFEXITED(status))
+				mini->last_exit_code = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				mini->last_exit_code = 128 + WTERMSIG(status);
+		}
+		else if (cmd->redirs && (cmd->fd_in == -1 || cmd->fd_out == -1))
+		{
+			mini->last_exit_code = 1;
+		}
 		cmd = cmd->next;
 	}
-	return (exit_code);
+	return (mini->last_exit_code);
 }
 
 int	wait_child(t_data *mini, int child_pid)

@@ -6,25 +6,44 @@
 /*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:14:39 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/15 17:22:58 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/16 01:46:08 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// int	run_prompt(t_data *mini)
+// {
+// 	if (tokenize_input(mini))
+// 		return (free_data(mini), mini->exit_code);
+// 	if (validate_syntax(mini))
+// 		return (free_data(mini), mini->exit_code);
+// 	if (expand_tokens(mini))
+// 		return (free_data(mini), mini->exit_code);
+// 	if (parse_cmds(mini))
+// 		return (free_data(mini), mini->exit_code);
+// 	if (execute(mini))
+// 		return (free_data(mini), mini->exit_code);
+// 	return (free_data(mini), mini->last_exit_code);
+// }
+
 int	run_prompt(t_data *mini)
 {
-	if (tokenize_input(mini))
-		return (free_data(mini), mini->exit_code);
-	if (validate_syntax(mini))
-		return (free_data(mini), mini->exit_code);
-	if (expand_tokens(mini))
-		return (free_data(mini), mini->exit_code);
-	if (parse_cmds(mini)) //mini is not updated somehow with last_exit_code and echo $? is wrong with just one command <infile
-		return (free_data(mini), mini->exit_code);
-	if (execute(mini))
-		return (free_data(mini), mini->exit_code);
-	return (free_data(mini), 0);
+	int code;
+
+	if (tokenize_input(mini)
+		|| validate_syntax(mini)
+		|| expand_tokens(mini))
+	{
+		code = mini->last_exit_code;
+		free_data(mini);
+		return (code);
+	}
+	parse_cmds(mini);
+	execute(mini);
+	code = mini->last_exit_code;
+	free_data(mini);
+	return (code);
 }
 
 void	run_mini(t_data	*mini)
