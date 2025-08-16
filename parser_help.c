@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_help.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:49:33 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/16 01:46:43 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/16 11:30:14 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_cmd *alloc_cmd(void)
+t_cmd	*alloc_cmd(void)
 {
 	t_cmd	*cmd;
 

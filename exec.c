@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 14:50:50 by hgatarek          #+#    #+#             */
-/*   Updated: 2025/08/16 01:45:13 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/16 11:29:18 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,20 @@ void	execute_child_process(t_cmd *cmd, t_data *mini)
 int	apply_redirections(t_cmd *cmd)
 {
 	if (cmd->fd_in == -1 || cmd->fd_out == -1)
-        return (1);
+		return (1);
 	if (cmd->fd_in != STDIN_FILENO)
-    {
-        if (dup2(cmd->fd_in, STDIN_FILENO) == -1)
-            return (perror("dup2"), 1);
-        close(cmd->fd_in);
-    }
-    if (cmd->fd_out != STDOUT_FILENO)
-    {
-        if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
-            return (perror("dup2"), 1);
-        close(cmd->fd_out);
-    }
-return (0);
+	{
+		if (dup2(cmd->fd_in, STDIN_FILENO) == -1)
+			return (perror("dup2"), 1);
+		close(cmd->fd_in);
+	}
+	if (cmd->fd_out != STDOUT_FILENO)
+	{
+		if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
+			return (perror("dup2"), 1);
+		close(cmd->fd_out);
+	}
+	return (0);
 }
 
 int	launch_command(t_cmd *cmd, t_data *mini, int prev_pipe_read_end,

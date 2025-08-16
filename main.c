@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:14:39 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/16 01:46:08 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/16 11:27:51 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@
 // 		return (free_data(mini), mini->exit_code);
 // 	if (execute(mini))
 // 		return (free_data(mini), mini->exit_code);
-// 	return (free_data(mini), mini->last_exit_code);
+// 	return (free_data(mini), 0);
 // }
 
 int	run_prompt(t_data *mini)
 {
-	int code;
+	int	code;
 
 	if (tokenize_input(mini)
 		|| validate_syntax(mini)

@@ -6,7 +6,7 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:00:36 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/04 18:03:16 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/16 11:22:09 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	unlink_tmp(t_data *mini)
 		cur_redir = cur_cmd->redirs;
 		while (cur_redir)
 		{
-			if (cur_redir->type == T_HEREDOC)
+			if (cur_redir->type == T_HEREDOC && cur_redir->file)
 				unlink(cur_redir->file);
 			cur_redir = cur_redir->next;
 		}
