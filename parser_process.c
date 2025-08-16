@@ -6,7 +6,7 @@
 /*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:50:53 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/06 17:43:45 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/15 20:54:51 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,26 +42,24 @@ t_cmd	*add_cmd(t_parser *pars)
 {
 	t_cmd	*new_cmd;
 
-	new_cmd = malloc(sizeof(t_cmd));
+	new_cmd = alloc_cmd();
 	if (!new_cmd)
 		return (NULL);
-	ft_bzero(new_cmd, sizeof(t_cmd));
-	new_cmd->fd_in = STDIN_FILENO;
-	new_cmd->fd_out = STDOUT_FILENO;
-	new_cmd->next = NULL;
-	new_cmd->pid = -1;
 	pars->arg_count = count_cmd_args(pars->cur_token);
 	if (pars->arg_count < 0)
-		return (NULL);
-	new_cmd->args = ft_calloc(pars->arg_count + 1, sizeof(char *));
-	if (!new_cmd->args)
-		return (NULL);
+		return (free(new_cmd), NULL);
+	if (pars->arg_count > 0)
+	{
+		new_cmd->args = ft_calloc(pars->arg_count + 1, sizeof(char *));
+		if (!new_cmd->args)
+			return (free(new_cmd), NULL);
+	}
 	if (!pars->mini->cmds)
 		pars->mini->cmds = new_cmd;
 	else if (pars->cur_cmd)
 		pars->cur_cmd->next = new_cmd;
 	else
-		return (NULL);
+		return (free_arr(new_cmd->args), free(new_cmd), NULL);
 	pars->cur_redir = NULL;
 	pars->arg_i = 0;
 	return (new_cmd);
