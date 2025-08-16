@@ -6,7 +6,7 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:14:39 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/16 11:27:51 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/16 11:58:40 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ int	run_prompt(t_data *mini)
 		free_data(mini);
 		return (code);
 	}
-	parse_cmds(mini);
+	if (parse_cmds(mini))
+		return (free_data(mini), mini->exit_code);
 	execute(mini);
 	code = mini->last_exit_code;
 	free_data(mini);

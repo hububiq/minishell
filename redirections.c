@@ -6,7 +6,7 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 14:47:29 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/16 11:33:17 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/16 13:06:22 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,16 @@ int	handle_cmd_redirs(t_parser *pars)
 
 int	process_redirs(t_parser *pars)
 {
+	int	exit_code;
+
 	pars->cur_cmd = pars->mini->cmds;
 	while (pars->cur_cmd)
 	{
+		exit_code = 0;
 		pars->cur_redir = pars->cur_cmd->redirs;
 		if (handle_cmd_redirs(pars))
-			return (1);
+			exit_code = 1;
 		pars->cur_cmd = pars->cur_cmd->next;
 	}
-	return (0);
+	return (exit_code);
 }
