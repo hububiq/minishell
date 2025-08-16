@@ -6,7 +6,7 @@
 /*   By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 14:50:50 by hgatarek          #+#    #+#             */
-/*   Updated: 2025/08/12 12:09:54 by hgatarek         ###   ########.fr       */
+/*   Updated: 2025/08/15 13:01:43 by hgatarek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	execute_child_process(t_cmd *cmd, t_data *mini)
 {
 	char	**envp;
 
+	if (!cmd->args || !cmd->args[0])
+		exit(0);
 	if (!cmd->path)
 	{
 		write(STDERR_FILENO, "mini: ", 6);
