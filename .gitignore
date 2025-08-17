@@ -1,0 +1,19 @@
+# Ignore everything by default
+*
+
+# But allow these file types anywhere (in any subdirectory)
+!*.c
+!*.h
+!Makefile
+!.gitignore
+
+# Allow directories so Git can find allowed files inside them
+!*/
+
+# Optional: ignore common build artifacts just in case
+*.o
+*.out
+*.a
+*.so
+*.dSYM/
+*.exe

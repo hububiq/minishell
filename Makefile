@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hgatarek <hgatarek@student.42.fr>          +#+  +:+       +#+         #
+#    By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/18 10:20:20 by mdziadko          #+#    #+#              #
-#    Updated: 2025/08/16 01:46:09 by hgatarek         ###   ########.fr        #
+#    Updated: 2025/08/17 16:14:31 by mdziadko         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@
 
 NAME		= minishell
 CC 			= cc
-CFLAGS		= -Wall -Wextra -Werror -g3
+CFLAGS		= -Wall -Wextra -Werror -g3 #-fsanitize=address
 AR			= ar rcs
 RM			= rm -f
 # MINI_FLAGS	= -lreadline #-lhistory UNCOMMENT ON LINUX

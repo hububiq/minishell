@@ -6,7 +6,7 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:49:33 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/16 11:30:14 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/17 17:07:05 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,16 +85,16 @@ int	find_executable(t_cmd *cmd, char **dirs)
 
 	i = 0;
 	if (!dirs)
-		return (0);
+		return (1);
 	while (dirs[i])
 	{
 		temp = ft_strjoin(dirs[i], "/");
 		if (!temp)
-			return (0);
+			return (report_error("malloc", errno), 1);
 		full_path = ft_strjoin(temp, cmd->args[0]);
 		free (temp);
 		if (!full_path)
-			return (0);
+			return (report_error("malloc", errno), 1);
 		if (access(full_path, X_OK) == 0)
 		{
 			cmd->path = full_path;
