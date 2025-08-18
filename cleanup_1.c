@@ -6,7 +6,7 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:00:36 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/16 11:22:09 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/17 17:10:12 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ void	free_arr(char **arr)
 {
 	int	i;
 
-	i = 0;
-	if (!arr || !*arr)
+	if (!arr)
 		return ;
+	i = 0;
 	while (arr[i])
 	{
 		free(arr[i]);
@@ -79,3 +79,18 @@ void	free_arr(char **arr)
 	}
 	free(arr);
 }
+
+// void	free_arr(char **arr)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	if (!arr || !*arr)
+// 		return ;
+// 	while (arr[i])
+// 	{
+// 		free(arr[i]);
+// 		i++;
+// 	}
+// 	free(arr);
+// }

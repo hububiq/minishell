@@ -6,7 +6,7 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:42:04 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/10 23:07:09 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/17 20:08:46 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void	find_var_limits(t_expander	*exp)
 	while (exp->str[exp->var_end]
 		&& !ft_isspace(exp->str[exp->var_end])
 		&& !is_special(exp->str[exp->var_end])
-		&& !is_quote(exp->str[exp->var_end]))
+		&& !is_quote(exp->str[exp->var_end])
+		&& !(exp->str[exp->var_end] == '$'))
 		exp->var_end++;
 }
 

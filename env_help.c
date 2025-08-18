@@ -6,7 +6,7 @@
 /*   By: mdziadko <mdziadko@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 22:59:20 by mdziadko          #+#    #+#             */
-/*   Updated: 2025/08/10 23:03:49 by mdziadko         ###   ########.fr       */
+/*   Updated: 2025/08/17 16:42:34 by mdziadko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	print_env(t_env *head, char *key)
 	while (cur)
 	{
 		if (!key || ft_strcmp(key, cur->key) == 0)
-			printf("%s = %s\n", cur->key, cur->value);
+			printf("%s=%s\n", cur->key, cur->value);
 		cur = cur->next;
 	}
 }
