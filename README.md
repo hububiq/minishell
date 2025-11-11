@@ -19,5 +19,5 @@ make
 ```
 ./minishell
 ```
-# Try commands knowns to Bash
+# Try commands known to Bash
 Terminal is now waiting for you to type whatever you want. You can play with the commands, redirections and piping to see how the original Bash is emulated.
